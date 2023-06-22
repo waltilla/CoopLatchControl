@@ -22,7 +22,7 @@ sta_if = network.WLAN(network.STA_IF)
 ip = sta_if.ifconfig()[0]
 print(ip)
 
-#Print IP to Pico W
+#Print IP on display Pico W
 for i in range(3):
     mydisplay.show("strt")
     sleep(1)

@@ -14,13 +14,15 @@ mydisplay.brightness(0)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect("StarDestroyer","aaasssddd")
+
+sleep(10)
+
 sta_if = network.WLAN(network.STA_IF)
 ip = sta_if.ifconfig()[0]
 print(ip)
 
 # Motor driver config
 board = PicoMotorDriver.KitronikPicoMotor()
-
 
 # Print IP on display Pico W
 for i in range(1):
@@ -57,6 +59,7 @@ while True:
         sleep(1)
         for x in ip.split("."):
             mydisplay.number(int(x))
+            print(x)
             print("ye")
             sleep(1)
 

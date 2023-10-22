@@ -1,1 +1,1 @@
-A small machine to open and close the hatch for a chicken coop  
+Collection of raspberry pi pico microservices for my home and chicken coop. 

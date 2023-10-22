@@ -1,0 +1,119 @@
+import ubinascii
+import machine
+import urequests as requests
+import network
+import tm1637
+import json
+import datetime
+import time
+import _thread
+from machine import Pin
+from utime import sleep
+
+# ----- Button Config -----
+button_on_clock = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_DOWN)
+
+# ----- 7 Segment Display Config -----
+clock_display = tm1637.TM1637(clk=Pin(16), dio=Pin(17))
+clock_display.brightness(0)
+
+# ----- WLAN Config -----
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect("StarDestroyer","aaasssddd")
+clock_display.show("INIT")
+sleep(5)    #Add time to make sure its connected
+
+# ----- Print ip -----
+status = wlan.ifconfig()
+ip = status[0]
+print('ip = ' + ip)
+for splitted_ip_number in ip.split("."):
+    clock_display.number(int(splitted_ip_number))
+    sleep(0)
+
+# ----- Function: Get dateTime from timeapi.io -----
+def get_datetime_from_api():
+    timeApiUrl = 'https://timeapi.io/api/Time/current/coordinate?latitude=57.71&longitude=11.97' # lat lon gothenburg
+    response = requests.get(timeApiUrl).json()
+    time_obj = datetime.time(response.get('hour'), response.get('minute'))               # Time now
+    splitdate = response.get('date').split('/')
+    print(splitdate)
+    date_today = datetime.date(int(splitdate[2]), int(splitdate[0]),int(splitdate[1]))                  # Today's date
+    print(date_today)
+    return datetime.datetime.combine(date_today, time_obj)  # Combine date and time
+
+
+datetime_obj = get_datetime_from_api()
+print(datetime_obj.time())
+
+secounds60 = 0
+isOpen = False
+current_state = False
+last_state = False
+
+while True:
+
+    # Update display every one minute
+    sleep(1)
+    secounds60 += 1
+
+    numberss = str(datetime_obj.time())
+    numbers = numberss.split(":")
+    clock_display.show(str(numbers[0]) + str(numbers[1]))
+
+
+    #Call hatch part
+    current_state = button_on_clock.value()
+    if last_state == False and current_state == True:
+        if(isOpen == False):
+            print("open")
+            request = requests.get('http://192.168.1.224/open_hatch')
+            sleep(10)
+            print(request.content)
+            request.close()
+            isOpen = True
+            time.sleep(1)
+        else:
+            print("close")
+            request2 = requests.get('http://192.168.1.224/close_hatch')
+            print(request2.content)
+            request2.close()
+            isOpen = False
+            time.sleep(10)
+    last_state = current_state
+
+
+
+    # correct time part
+    if(secounds60 == 60):
+        print(60)
+        secounds60 = 0
+        one_minute = datetime.timedelta(milliseconds=59500)  # correct the time with millis cause this loop takes more than 1 sec
+        datetime_obj = datetime_obj + one_minute  # Add one minute
+
+        resetminute = str(datetime_obj.time())
+        resetminutee = resetminute.split(":")
+
+        if(str(resetminutee[1]) == str('20') or str(resetminutee[1]) == '40' or str(resetminutee[1]) == '00'):
+            print('40')
+            print(datetime.time())
+            if(str(datetime.time()) == '06:00:00' or str(datetime.time()) == '16:00:00'):# reset time every morning
+                print('pull')
+                datetime_obj = get_datetime_from_api()
+
+
+
+
+
+                §
+
+
+
+
+
+
+
+
+
+

@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/clock_hatch_control/CLOCK/CLOCK.iml" filepath="$PROJECT_DIR$/clock_hatch_control/CLOCK/CLOCK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clock_hatch_control/clock_hatch_control.iml" filepath="$PROJECT_DIR$/clock_hatch_control/clock_hatch_control.iml" />
+      <module fileurl="file://$PROJECT_DIR$/garage_sensor/garage_sensor.iml" filepath="$PROJECT_DIR$/garage_sensor/garage_sensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/hatchPythonScript.iml" filepath="$PROJECT_DIR$/hatchPythonScript.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/main/main.iml" filepath="$PROJECT_DIR$/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/motorController/main/main.iml" filepath="$PROJECT_DIR$/motorController/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/motorController/motorController.iml" filepath="$PROJECT_DIR$/motorController/motorController.iml" />
     </modules>
   </component>
 </project>

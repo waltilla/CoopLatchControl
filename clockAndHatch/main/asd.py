@@ -1,7 +1,3 @@
-
-#
-#   Final Version 1.0 All ok
-#
 import socket
 import network
 import tm1637
@@ -21,14 +17,12 @@ mydisplay.brightness(0)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect("StarDestroyer","aaasssddd")
-
 sleep(10)
-
 sta_if = network.WLAN(network.STA_IF)
 ip = sta_if.ifconfig()[0]
-print(ip)
+
 # Print IP on display Pico W
-for i in range(1):
+for i in range(2):
     mydisplay.show("strt")
     sleep(1)
     for x in ip.split("."):
@@ -36,29 +30,25 @@ for i in range(1):
         print("ye")
         sleep(1)
 
-addr = socket.getaddrinfo('0.0.0.0', 4441)[0][-1]
-
+addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
 s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(addr)
 s.listen(1)
 
-
 while True:
+
+    mydisplay.show("wait")
     cl, addr = s.accept()
     cl_file = cl.makefile('rwb', 0)
     while True:
         line = cl_file.readline()
+        if "temp" in line:
+            Temp,Humid = dht11.read()
+            returnMessage = "temp," + Temp +",humid," + Humid
+            cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
+            cl.send(returnMessage)
+            cl.close()
 
         if not line or line == b'\r\n':
             break
-
-    Temp,Humid = dht11.read()
-    returnMessage = "temp," + str(Temp) +",humid," + str(Humid)
-    print(returnMessage)
-    cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
-    cl.send(returnMessage)
-    cl.close()
-
-
-

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/motorController/main/aasd.iml" filepath="$PROJECT_DIR$/motorController/main/aasd.iml" />
       <module fileurl="file://$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" filepath="$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/garageSensor/garageSensor.iml" filepath="$PROJECT_DIR$/garageSensor/garageSensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/motorController/motorController.iml" filepath="$PROJECT_DIR$/motorController/motorController.iml" />

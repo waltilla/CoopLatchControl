@@ -1,3 +1,5 @@
+
+# NEED SOME POLISH BUT WORKS AS INTENDED!
 import socket
 import network
 import tm1637
@@ -14,8 +16,8 @@ mydisplay.brightness(0)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect("StarDestroyer","aaasssddd")
-mydisplay.number(int(15))
-sleep(15)
+mydisplay.number(int(10))
+sleep(10)
 
 sta_if = network.WLAN(network.STA_IF)
 ip = sta_if.ifconfig()[0]
@@ -34,16 +36,10 @@ for i in range(1):
         sleep(1)
 
 mydisplay.number(int(4441))
-
 addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
-
 s = socket.socket()
-
-
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
 s.bind(addr)
-
 s.listen(1)
 
 
@@ -52,64 +48,62 @@ print(addr)
 
 closed = True
 
-while True:
-
-    for i in range(2):
-        mydisplay.show("strt")
+for i in range(2):
+    mydisplay.show("strt")
+    sleep(1)
+    for x in ip.split("."):
+        mydisplay.number(int(x))
+        print(x)
+        print("ye")
         sleep(1)
-        for x in ip.split("."):
-            mydisplay.number(int(x))
-            print(x)
-            print("ye")
-            sleep(1)
 
-    mydisplay.show("wait")
-    # Return message
-    returnMessage = ""
-    # show scrolling text
-    # update display
-    cl, addr = s.accept()
-    cl_file = cl.makefile('rwb', 0)
-    while True:
-        line = cl_file.readline()
+while True:
+    try:
+        cl, addr = s.accept()
+        print('client connected from', addr)
+        request = cl.recv(1024)
+        print(request)
+
+        line = str(request)
+
+        returnMessage = ""
+
         if "open_hatch" in line:
-
             if closed == True:
                 print("open hatch cause closed")
-                print("code for open hatch")
                 returnMessage = "open_hatch"
-                cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
-                cl.send(returnMessage)
-                cl.close()
                 for x in range(110):
-                    board.step("f", 8, True)
+                    board.step("f", 8)
                 closed = False
             else:
                 print("already open")
-                returnMessage = "open_hatch_allready_opened"
-                cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
-                cl.send(returnMessage)
-                cl.close()
+                returnMessage = "allready_open"
 
         if "close_hatch" in line:
             if closed == False:
-                print("closing hatch")
-                print("code for closing hatch")
-                returnMessage = "close_hatch"
-                cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
-                cl.send(returnMessage)
-                cl.close()
+                returnMessage = "closing"
                 for x in range(110):
-                    board.step("r", 8, False)
+                    board.step("r", 8)
+                board.motorOff(1)
+                board.motorOff(2)
                 closed = True
             else:
                 print("already closed")
-                returnMessage = "close_hatch_Already_closed"
-                cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
-                cl.send(returnMessage)
-                cl.close()
-        if not line or line == b'\r\n':
-            break
+                returnMessage = "allready_closed"
+
+
+        cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
+        cl.send(returnMessage)
+        cl.close()
+        print("eh                          " + returnMessage)
+
+    except OSError as e:
+        cl.close()
+        print('connection closed')
+
+
+
+
 
 
 

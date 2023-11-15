@@ -1,83 +1,80 @@
-import socket
+import machine
+import urequests as requests
 import network
-from lib import tm1637
-from machine import Pin
+import datetime
+import time
 from utime import sleep
-from dht22 import DHT22
+from machine import Pin
+import tm1637
+
+#button config
 
 # 7 Segment Display Config
 mydisplay = tm1637.TM1637(clk=Pin(16), dio=Pin(17))
 mydisplay.brightness(0)
+mydisplay.show("helo")
 
-# Temp/Humidity Sensor Config
-dht = Pin(11,Pin.IN,Pin.PULL_UP)
-dht11 = DHT22(dht,None,dht11=True)
-
-
-# WLAN Config
+# ----- WLAN Config -----
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect("StarDestroyer","aaasssddd")
-sta_if = network.WLAN(network.STA_IF)
-ip = sta_if.ifconfig()[0]
-print(ip)
+sleep(7)    #Add time to make sure its connected
 
-#Print IP to Pico W
-for i in range(3):
-    mydisplay.show("strt")
-    sleep(1)
-    for x in ip.split("."):
-        print(mydisplay.number(int(x)))
-        sleep(1)
 
-addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
-s = socket.socket()
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind(addr)
-s.listen(1)
+def get_datetime_tuple():
+    timeAPI = 'https://timeapi.io/api/Time/current/coordinate?latitude=57.70&longitude=11.97' # lat lon gothenburg
+    d = requests.get(timeAPI).json() #Return
+    return ((d.get('year'), d.get('month'), d.get('day'),0, d.get('hour'), d.get('minute'), d.get('seconds'), 0))
 
-#Show IP on Display
-print(addr)
-closed = True
+def addZeroInSecounds(sec):
+    if len(sec) == 1:
+        return "0" + sec
+    else:
+        return sec
+
+
+# Set time
+rtc = machine.RTC()
+rtc.datetime(get_datetime_tuple())
+print(rtc.datetime())
+
+
+last_state = False
+current_state = False
+isOpen = False
 
 while True:
-    #show scrolling text
-    # update display
-    Temp,Humid = dht11.read()
-    mydisplay.temperature(Temp)
-    sleep(1)
-    mydisplay.number(Humid)
-    sleep(1)
 
-    cl, addr = s.accept()
-    cl_file = cl.makefile('rwb', 0)
-    while True:
-        line = cl_file.readline()
-        if "open_hatch" in line:
+    #show time on 7segment display
+    sleep(5)
+    time = str(rtc.datetime()).split(",")
+    minutesWithSpace = str(time[4]) + addZeroInSecounds(str(time[5]))
+    mydisplay.show(minutesWithSpace.replace(' ', ''))
 
-            if closed == True:
-                print("open hatch cause closed")
-                print("code for open hatch")
-                closed = False
-            else:
-                print("already open")
-            break
+    #open and close hatch by time
+    if(time[4] == 8 and isOpen == False):
+        rtc.datetime(get_datetime_tuple())
+        request = requests.get('http://192.168.1.224/open_hatch')
+        sleep(22)
+        request.close()
+        isOpen = True
 
-        if "close_hatch" in line:
+    if(time[4] == 18 and isOpen == True):
+        rtc.datetime(get_datetime_tuple())
+        print("close")
+        request2 = requests.get('http://192.168.1.224/close_hatch')
+        sleep(22)
+        request2.close()
+        isOpen = False
 
-            if closed == False:
-                print("closing hatch")
-                print("code for closing hatch")
-                closed = True
-            else:
-                print("already closed")
-            break
 
-        if not line or line == b'\r\n':
-            break
 
-    cl.send('HTTP/1.0 200 OK\r\nContent-type: text/plain\r\n\r\n')
-    cl.send("Temp: " + str(Temp) + "C Humidity: " + str(Humid))
-    cl.close()
+
+
+
+
+
+
+
 
 

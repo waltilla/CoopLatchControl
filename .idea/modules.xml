@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/temperatureLog/IkeaRelayaHack/IkeaRelayaHack.iml" filepath="$PROJECT_DIR$/temperatureLog/IkeaRelayaHack/IkeaRelayaHack.iml" />
       <module fileurl="file://$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" filepath="$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/garageSensor/garageSensor.iml" filepath="$PROJECT_DIR$/garageSensor/garageSensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/motorController/motorController.iml" filepath="$PROJECT_DIR$/motorController/motorController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clockAndHatch/scriptable/scriptable.iml" filepath="$PROJECT_DIR$/clockAndHatch/scriptable/scriptable.iml" />
       <module fileurl="file://$PROJECT_DIR$/temperatureLog/temperatureLog.iml" filepath="$PROJECT_DIR$/temperatureLog/temperatureLog.iml" />
     </modules>
   </component>

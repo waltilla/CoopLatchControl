@@ -76,7 +76,7 @@ class KitronikPicoMotor:
                         break
         #to save power turn off the coils once we have finished.
         #this means the motor wont hold position.
-        if(holdPosition == False):
+        if(holdPosition == True):
             self.motorOff(coils[0]) 			#small change, only do one coil.. cause of heat.
 
 

@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" filepath="$PROJECT_DIR$/clockAndHatch/clockAndHatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/garageSensor/garageSensor.iml" filepath="$PROJECT_DIR$/garageSensor/garageSensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/motorController/motorController.iml" filepath="$PROJECT_DIR$/motorController/motorController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clockAndHatch/rf433/rf433.iml" filepath="$PROJECT_DIR$/clockAndHatch/rf433/rf433.iml" />
       <module fileurl="file://$PROJECT_DIR$/clockAndHatch/scriptable/scriptable.iml" filepath="$PROJECT_DIR$/clockAndHatch/scriptable/scriptable.iml" />
       <module fileurl="file://$PROJECT_DIR$/temperatureLog/temperatureLog.iml" filepath="$PROJECT_DIR$/temperatureLog/temperatureLog.iml" />
     </modules>

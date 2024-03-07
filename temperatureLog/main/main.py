@@ -10,7 +10,7 @@ from machine import Pin
 from utime import sleep
 
 # Temp/Humid sensor config
-dht = Pin(0,Pin.IN,Pin.PULL_UP)
+dht = Pin(1,Pin.IN,Pin.PULL_UP)
 dht11 = DHT22(dht,None,dht11=True)
 dhtUte = Pin(0,Pin.IN,Pin.PULL_UP)
 dht11Ute = DHT22(dhtUte,None,dht11=True)
@@ -37,7 +37,6 @@ for i in range(1):
         print("ye")
 
 addr = socket.getaddrinfo('0.0.0.0', 4441)[0][-1]
-
 s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(addr)
@@ -56,6 +55,7 @@ while True:
 
     Temp,Humid = dht11.read()
     uTemp,uHumid = dht11Ute.read()
+
 
     returnMessage = "temp_inside," + str(Temp) +",humid_inside," + str(Humid) + ",temp_outside," + str(uTemp) +",humid_outside," + str(uHumid)
     print(returnMessage)
